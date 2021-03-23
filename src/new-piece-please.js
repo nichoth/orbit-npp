@@ -33,14 +33,38 @@ class NewPiecePlease {
         this.onready()
     }
 
-    async addNewPiece (hash, instrument = 'Piano') {
-        // const existingPiece = this.getPieceByHash(hash)
-        // if (existingPiece) {
-        //     // await this.updatePieceByHash(hash, instrument)
-        //     return
-        // }
+    getAllPieces () {
+        const pieces = this.pieces.get('')
+        return pieces
+    }
 
-    
+    getPieceByHash (hash) {
+        const singlePiece = this.pieces.get(hash)[0]
+        return singlePiece
+    }
+
+    getPieceByInstrument (instrument) {
+        return this.pieces.query(piece => piece.instrument === instrument)
+    }
+
+    async updatePieceByHash (hash, instrument = 'Piano') {
+        const piece = await this.getPieceByHash(hash)
+        console.log('**piece here***', piece)
+        piece.instrument = instrument
+        const cid = await this.pieces.put(piece)
+        console.log('**cid here**', cid)
+        return cid
+    }
+
+    async addNewPiece (hash, instrument = 'Piano') {
+        console.log('**hash**', hash)
+        const existingPiece = this.getPieceByHash(hash)
+        console.log('***existing', existingPiece)
+        if (existingPiece) {
+            await this.updatePieceByHash(hash, instrument)
+            return existingPiece.hash
+        }
+
         console.log('** in here**', hash)
         const cid = await this.pieces.put({
             _id: 'hello world',
