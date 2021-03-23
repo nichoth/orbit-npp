@@ -1,5 +1,5 @@
 var IPFS = require('ipfs')
-// var OrbitDB = require('orbit-db')
+var OrbitDB = require('orbit-db')
 
 class NewPiecePlease {
     constructor (Ipfs, OrbitDB) {
@@ -42,7 +42,6 @@ class NewPiecePlease {
 
     
         console.log('** in here**', hash)
-        // const cid = await this.pieces.put({ hash, instrument })
         const cid = await this.pieces.put({
             _id: 'hello world',
             hash,
@@ -53,7 +52,4 @@ class NewPiecePlease {
     }
 }
 
-// module.exports = NewPiecePlease
-
-// window.npp = module.exports = new NewPiecePlease(Ipfs, OrbitDB)
-window.npp = module.exports = new NewPiecePlease(window.Ipfs, window.OrbitDB)
+window.npp = module.exports = new NewPiecePlease(IPFS, OrbitDB)
