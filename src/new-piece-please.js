@@ -55,6 +55,11 @@ class NewPiecePlease {
         return cid
     }
 
+    async deletePieceByHash (hash) {
+        const cid = await this.pieces.del(hash)
+        return cid
+    }
+
     async addNewPiece (hash, instrument = 'Piano') {
         const existingPiece = this.getPieceByHash(hash)
         console.log('***existing', existingPiece)
