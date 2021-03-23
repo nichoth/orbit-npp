@@ -11,14 +11,14 @@ class NewPiecePlease {
         }
 
         initIPFSInstance().then(async ipfs => {
-            console.log('wooo', ipfs)
+            // console.log('wooo', ipfs)
             this.node = ipfs
             this._init()
         })
     }
 
     async _init () {
-        console.log('this.node', this.node)
+        // console.log('this.node', this.node)
         this.orbitdb = await this.OrbitDB.createInstance(this.node)
         this.defaultOptions = {
             accessController: { write: [this.orbitdb.identity.id] }
@@ -49,7 +49,6 @@ class NewPiecePlease {
 
     async updatePieceByHash (hash, instrument = 'Piano') {
         const piece = await this.getPieceByHash(hash)
-        console.log('**piece here***', piece)
         piece.instrument = instrument
         const cid = await this.pieces.put(piece)
         console.log('**cid here**', cid)
@@ -57,15 +56,13 @@ class NewPiecePlease {
     }
 
     async addNewPiece (hash, instrument = 'Piano') {
-        console.log('**hash**', hash)
         const existingPiece = this.getPieceByHash(hash)
         console.log('***existing', existingPiece)
         if (existingPiece) {
-            await this.updatePieceByHash(hash, instrument)
-            return existingPiece.hash
+            const cid = await this.updatePieceByHash(hash, instrument)
+            return cid
         }
 
-        console.log('** in here**', hash)
         const cid = await this.pieces.put({
             _id: 'hello world',
             hash,
