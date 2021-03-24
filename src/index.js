@@ -1,5 +1,7 @@
 var npp = require('./new-piece-please')
 
+// window.LOG='orbit*'
+
 // https://github.com/orbitdb/field-manual/blob/master/01_Tutorial/02_Managing_Data.md#storing-media-files
 
 npp.onready = async () => {
@@ -32,7 +34,7 @@ npp.onready = async () => {
         .then(res => console.log('**bootstrap', res))
 
 
-    npp.onpeerconnect = info => console.log('onperrconnect', info)
+    npp.onpeerconnect = info => console.log('onpeerconnect', info)
     await npp.connectToPeer('QmWxWkrCcgNBG2uf1HSVAwb9RzcSYYC2d6CRsfJcqrz2FX')
     // some time later, outputs 'QmWxWkrCcgNBG2uf1HSVAwb9RzcSYYC2d6CRsfJcqrz2FX'
 

@@ -13,7 +13,13 @@ class NewPiecePlease {
                     hop: { enabled: true, active: true }
                 },
                 EXPERIMENTAL: { pubsub: true },
-                repo: "./path-for-js-ipfs-repo"
+                repo: "./path-for-js-ipfs-repo",
+                recursive: false
+                // Swarm: [
+                //     "/ip4/0.0.0.0/tcp/4001",
+                //     "/ip4/0.0.0.0/tcp/4004/ws",
+                //     "/ip6/::/tcp/4001"
+                // ]
             })
         }
 
@@ -83,7 +89,9 @@ class NewPiecePlease {
     async connectToPeer (multiaddr, protocol = '/p2p-circuit/ipfs/') {
         try {
             console.log('swarm.connect: ', protocol + multiaddr)
-            await this.node.swarm.connect(protocol + multiaddr)
+            await this.node.swarm.connect(protocol + multiaddr, {
+                recursive: false
+            })
         } catch (err) {
             console.log('oh no', err)
             throw (err)
