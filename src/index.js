@@ -19,12 +19,6 @@ npp.onready = async () => {
     npp.node.bootstrap.list()
         .then(res => console.log('**bootstrap', res))
 
-
-
-
-
-
-
     npp.pieces.events.on('replicated', (ev) => {
         console.log('original db replicated', ev)
     })
@@ -50,24 +44,25 @@ npp.onready = async () => {
 
 
 
-        npp.addNewPiece('QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ')
-            .then(async cid => {
-                npp.node.dag.get(cid)
-                    .then(res => {
-                        console.log('dag.get cid', res)
-                    })
-                    .catch(err => console.log('**errrr**', err))
+        setTimeout(function () {
+            npp.addNewPiece('QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ')
+                .then(async cid => {
+                    npp.node.dag.get(cid)
+                        .then(res => {
+                            console.log('dag.get cid', res)
+                        })
+                        .catch(err => console.log('**errrr**', err))
 
-                // const _cid = await NPP.updatePiece("QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
-                //     "Harpsichord")
-                // do stuff with the cid as above
-                
-                // const _cid = await npp.deletePieceByHash(
-                //     'QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ')
-                const content = await npp.node.dag.get(cid)
-                console.log('added piece', content.value.payload)
-            })
-
+                    // const _cid = await NPP.updatePiece("QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ",
+                    //     "Harpsichord")
+                    // do stuff with the cid as above
+                    
+                    // const _cid = await npp.deletePieceByHash(
+                    //     'QmNR2n4zywCV61MeMLB6JwPueAPqheqpfiA4fLPMxouEmQ')
+                    const content = await npp.node.dag.get(cid)
+                    console.log('added piece', content.value.payload)
+                })
+        }, 3000)
 
 
 
