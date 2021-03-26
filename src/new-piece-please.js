@@ -1,5 +1,5 @@
-var IPFS = require('ipfs')
-var OrbitDB = require('orbit-db')
+// var IPFS = require('ipfs')
+// var OrbitDB = require('orbit-db')
 
 class NewPiecePlease {
     constructor (IPFS, OrbitDB) {
@@ -14,6 +14,10 @@ class NewPiecePlease {
                 },
                 EXPERIMENTAL: { pubsub: true },
                 repo: "./path-for-js-ipfs-repo",
+                relay: {
+                    enabled: true,
+                    hop: { enabled: true, active: true }
+                },
                 recursive: false
                 // Swarm: [
                 //     "/ip4/0.0.0.0/tcp/4001",
@@ -89,9 +93,7 @@ class NewPiecePlease {
     async connectToPeer (multiaddr, protocol = '/p2p-circuit/ipfs/') {
         try {
             console.log('swarm.connect: ', protocol + multiaddr)
-            await this.node.swarm.connect(protocol + multiaddr, {
-                recursive: false
-            })
+            await this.node.swarm.connect(protocol + multiaddr)
         } catch (err) {
             console.log('oh no', err)
             throw (err)
@@ -129,4 +131,6 @@ class NewPiecePlease {
     }
 }
 
-window.npp = module.exports = new NewPiecePlease(IPFS, OrbitDB)
+module.exports = NewPiecePlease
+
+// window.npp = module.exports = new NewPiecePlease(IPFS, OrbitDB)

@@ -1,4 +1,7 @@
-var npp = require('./new-piece-please')
+var IPFS = require('ipfs')
+var OrbitDB = require('orbit-db')
+var NPP = require('./new-piece-please')
+var npp = new NPP(IPFS, OrbitDB)
 
 // window.LOG='orbit*'
 
