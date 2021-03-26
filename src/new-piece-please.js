@@ -1,10 +1,13 @@
 // var IPFS = require('ipfs')
 // var OrbitDB = require('orbit-db')
 
+var timestamp = require('monotonic-timestamp')
+
 class NewPiecePlease {
-    constructor (IPFS, OrbitDB) {
+    constructor (IPFS, OrbitDB, addr) {
         this.IPFS = IPFS
         this.OrbitDB = OrbitDB
+        this.addr = addr
 
         const initIPFSInstance = async () => {
             return await IPFS.create({
@@ -13,7 +16,7 @@ class NewPiecePlease {
                     hop: { enabled: true, active: true }
                 },
                 EXPERIMENTAL: { pubsub: true },
-                repo: "./path-for-js-ipfs-repo",
+                repo: "./path-for-js-ipfs-repo" + timestamp(),
                 relay: {
                     enabled: true,
                     hop: { enabled: true, active: true }
@@ -28,10 +31,9 @@ class NewPiecePlease {
         }
 
         initIPFSInstance().then(async ipfs => {
-            // console.log('wooo', ipfs)
             this.node = ipfs
             // this.node.bootstrap.add(undefined, { default: true })
-            this._init()
+            await this._init()
         })
     }
 
@@ -41,23 +43,16 @@ class NewPiecePlease {
         this.defaultOptions = {
             accessController: { write: [this.orbitdb.identity.id] }
         }
-        // console.log('**id.id**', this.orbitdb.identity)
         const docStoreOptions = {
             ...this.defaultOptions,
             indexBy: 'hash'
         }
-        this.pieces = await this.orbitdb.docstore('pieces', docStoreOptions)
+        this.pieces = await this.orbitdb.docstore(this.addr || 'pieces',
+            docStoreOptions)
         await this.pieces.load()
 
         this.user = await this.orbitdb.kvstore('user', this.defaultOptions)
-        console.log('**user', this.user)
         await this.user.load()
-
-        // await this.loadFixtureData({
-        //     'username': Math.floor(Math.random() * 1000000),
-        //     'pieces': this.pieces.id,
-        //     'nodeId': peerInfo.id
-        // })
 
         this.node.libp2p.on('peer:connect',
             this.handlePeerConnected.bind(this))
@@ -90,7 +85,7 @@ class NewPiecePlease {
         return peers
     }
 
-    async connectToPeer (multiaddr, protocol = '/p2p-circuit/ipfs/') {
+    async connectToPeer (multiaddr, protocol = '/p2p-circuit/ipfs') {
         try {
             console.log('swarm.connect: ', protocol + multiaddr)
             await this.node.swarm.connect(protocol + multiaddr)
@@ -104,7 +99,6 @@ class NewPiecePlease {
         const piece = await this.getPieceByHash(hash)
         piece.instrument = instrument
         const cid = await this.pieces.put(piece)
-        // console.log('**cid here**', cid)
         return cid
     }
 
@@ -126,7 +120,6 @@ class NewPiecePlease {
             hash,
             doc: { hash, instrument }
         })
-        // console.log('**cid**', cid)
         return cid
     }
 }
